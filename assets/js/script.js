@@ -64,11 +64,12 @@ var createTaskEl = function (taskDataObj) {
     listItemEl.appendChild(taskActionsEl);
     listItemEl.appendChild(taskInfoEl);
     taskDataObj.id = taskIdCounter;
+    
     tasks.push(taskDataObj);
 
-    saveTasks()
+    
     tasksToDoEl.appendChild(listItemEl);
-
+    saveTasks()
     // increase task counter for next unique id
     taskIdCounter++;
 }
@@ -114,7 +115,9 @@ var createTaskActions = function (taskId) {
     }
     return actionContainerEl
 }
+
 formEl.addEventListener("submit", taskFormHandler);
+
 var taskButtonHandler = function (event) {
     // get target element from event
     var targetEl = event.target;
@@ -217,5 +220,23 @@ var saveTasks = function() {
     localStorage.setItem("tasks", JSON.stringify(tasks));
 
 }
+
+var loadTasks = function() {
+    var savedTasks = localStorage.getItem("tasks");
+
+    if (!savedTasks) {
+    return false;
+    }
+
+    savedTasks = JSON.parse(savedTasks);
+    
+    // loop through savedTasks array
+    for (var i = 0; i < savedTasks.length; i++) {
+        // pass each task object into the `createTaskEl()` function
+        createTaskEl(savedTasks[i]);
+    }
+}
 pageContentEl.addEventListener("click", taskButtonHandler);
 pageContentEl.addEventListener("change", taskStatusChangeHandler);
+
+loadTasks();
