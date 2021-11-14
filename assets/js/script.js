@@ -20,7 +20,7 @@ var taskFormHandler = function (event) {
     var taskDataObj = {
         name: taskNameInput,
         type: taskTypeInput,
-        status: ""
+        status: "to do"
     };
     
     var isEdit = formEl.hasAttribute("data-task-id");
@@ -59,15 +59,33 @@ var createTaskEl = function (taskDataObj) {
     taskInfoEl.className = "task-info";
     // add HTML content to div
     taskInfoEl.innerHTML = "<h3 class= 'task-name'>" + taskDataObj.name + "</h3><span class='task-type'>" + taskDataObj.type + "</span>"
+    listItemEl.appendChild(taskInfoEl);
 
     var taskActionsEl = createTaskActions(taskIdCounter);
     listItemEl.appendChild(taskActionsEl);
-    listItemEl.appendChild(taskInfoEl);
+    
+    switch (taskDataObj.status) {
+        case "to do":
+        taskActionsEl.querySelector("select[name='status-change']").selectedIndex = 0;
+        tasksToDoEl.append(listItemEl);
+        break;
+        case "in progress":
+        taskActionsEl.querySelector("select[name='status-change']").selectedIndex = 1;
+        tasksInProgressEl.append(listItemEl);
+        break;
+        case "completed":
+        taskActionsEl.querySelector("select[name='status-change']").selectedIndex = 2;
+        tasksCompletedEl.append(listItemEl);
+        break;
+        default:
+        console.log("Something went wrong!");
+    }
+
     taskDataObj.id = taskIdCounter;
     tasks.push(taskDataObj);
 
     saveTasks()
-    tasksToDoEl.appendChild(listItemEl);
+    
 
     // increase task counter for next unique id
     taskIdCounter++;
